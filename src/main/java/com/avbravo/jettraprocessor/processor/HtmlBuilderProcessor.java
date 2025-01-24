@@ -8,7 +8,7 @@ package com.avbravo.jettraprocessor.processor;
  *
  * @author avbravo
  */
-import com.avbravo.jettraprocessor.annotation.Builder;
+import com.avbravo.jettraprocessor.annotation.HtmlBuilder;
 import java.io.IOException;
 import java.util.Set;
 
@@ -27,16 +27,16 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
-
 @AutoService(Processor.class)
 @SupportedAnnotationTypes("com.avbravo.jettraprocessor.annotation.HtmlBuilder")
 @SupportedSourceVersion(SourceVersion.RELEASE_21)
 public class HtmlBuilderProcessor extends AbstractProcessor {
-
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-
-        for (Element element : roundEnv.getElementsAnnotatedWith(Builder.class)) {
+        System.out.println("----------------------------------------------------------");
+      //  System.out.println(">>>>>>>>>>>[projectBuildDir] "+projectBuildDir);
+        System.out.println("----------------------------------------------------------");
+        for (Element element : roundEnv.getElementsAnnotatedWith(HtmlBuilder.class)) {
             JavaFileObject builderClass = null;
             PackageElement packageElement = (PackageElement) element.getEnclosingElement();
             BufferedWriter bufferedWriter = null;
@@ -44,11 +44,13 @@ public class HtmlBuilderProcessor extends AbstractProcessor {
                 String builderName = element.getSimpleName().toString() + "Html";
 
                 String builderGenName = packageElement.getQualifiedName().toString() + "." + builderName;
+                System.out.println("--> packageElement.getQualifiedName().toString(): "+packageElement.getQualifiedName().toString());
+                System.out.println("--> builderName: "+builderName);
+                System.out.println("--> builderGenName: "+builderGenName);
 
-//                builderClass = processingEnv.getFiler().createSourceFile(builderName);
                 builderClass = processingEnv.getFiler().createSourceFile(builderGenName);
                 bufferedWriter = new BufferedWriter(builderClass.openWriter());
-                bufferedWriter.append("<html>");
+       //         bufferedWriter.append("<html>");
                 bufferedWriter.append("package ");
                 bufferedWriter.append(packageElement.getQualifiedName().toString());
                 bufferedWriter.append(";");
@@ -102,7 +104,7 @@ public class HtmlBuilderProcessor extends AbstractProcessor {
                 bufferedWriter.newLine();
                 bufferedWriter.newLine();
                 bufferedWriter.append("}");
-                bufferedWriter.append("</html>");
+           //     bufferedWriter.append("</html>");
                 bufferedWriter.close();
             } catch (IOException e) {
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.toString());
