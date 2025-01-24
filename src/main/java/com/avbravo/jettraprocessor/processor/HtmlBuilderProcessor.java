@@ -41,13 +41,14 @@ public class HtmlBuilderProcessor extends AbstractProcessor {
             PackageElement packageElement = (PackageElement) element.getEnclosingElement();
             BufferedWriter bufferedWriter = null;
             try {
-                String builderName = element.getSimpleName().toString() + "Builder";
+                String builderName = element.getSimpleName().toString() + "Html";
 
                 String builderGenName = packageElement.getQualifiedName().toString() + "." + builderName;
 
 //                builderClass = processingEnv.getFiler().createSourceFile(builderName);
                 builderClass = processingEnv.getFiler().createSourceFile(builderGenName);
                 bufferedWriter = new BufferedWriter(builderClass.openWriter());
+                bufferedWriter.append("<html>");
                 bufferedWriter.append("package ");
                 bufferedWriter.append(packageElement.getQualifiedName().toString());
                 bufferedWriter.append(";");
@@ -101,6 +102,7 @@ public class HtmlBuilderProcessor extends AbstractProcessor {
                 bufferedWriter.newLine();
                 bufferedWriter.newLine();
                 bufferedWriter.append("}");
+                bufferedWriter.append("</html>");
                 bufferedWriter.close();
             } catch (IOException e) {
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.toString());
